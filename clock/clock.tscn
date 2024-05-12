@@ -1,0 +1,265 @@
+[gd_scene load_steps=16 format=3 uid="uid://b351e48i5hwxm"]
+
+[ext_resource type="Texture2D" uid="uid://vykv32jy8vpf" path="res://files/c_base.png" id="1_2irx3"]
+[ext_resource type="Script" path="res://clock.gd" id="2_0d46r"]
+[ext_resource type="Texture2D" uid="uid://bc51hc0r1bkav" path="res://files/hand_h.png" id="3_p0xtm"]
+[ext_resource type="Texture2D" uid="uid://d3cry8um667ij" path="res://files/hand_m.png" id="4_gifvs"]
+[ext_resource type="Texture2D" uid="uid://c0tikbgkh60uy" path="res://files/hand_s.png" id="5_l18gp"]
+[ext_resource type="Texture2D" uid="uid://i7i4osqeo6xt" path="res://icon.svg" id="6_fovwc"]
+
+[sub_resource type="Animation" id="Animation_jet07"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HandM:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_lypc8"]
+resource_name = "minutes_anim"
+length = 3600.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HandM:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3600),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mbwyp"]
+_data = {
+"RESET": SubResource("Animation_jet07"),
+"minutes_anim": SubResource("Animation_lypc8")
+}
+
+[sub_resource type="Animation" id="Animation_s87wr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HandH:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_63vev"]
+resource_name = "hours_anim"
+length = 43200.0
+loop_mode = 1
+step = 100.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HandH:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 43200),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_drv7h"]
+_data = {
+"RESET": SubResource("Animation_s87wr"),
+"hours_anim": SubResource("Animation_63vev")
+}
+
+[sub_resource type="Animation" id="Animation_eupwe"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HandS:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_p4gxl"]
+resource_name = "seconds_anim"
+length = 60.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HandS:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 60),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cgyfd"]
+_data = {
+"RESET": SubResource("Animation_eupwe"),
+"seconds_anim": SubResource("Animation_p4gxl")
+}
+
+[node name="Node2D" type="Node2D"]
+
+[node name="clock" type="Sprite2D" parent="."]
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("1_2irx3")
+script = ExtResource("2_0d46r")
+
+[node name="HandH" type="Sprite2D" parent="clock"]
+texture = ExtResource("3_p0xtm")
+
+[node name="HandM" type="Sprite2D" parent="clock"]
+texture = ExtResource("4_gifvs")
+
+[node name="HandS" type="Sprite2D" parent="clock"]
+texture = ExtResource("5_l18gp")
+
+[node name="minutes" type="AnimationPlayer" parent="clock"]
+libraries = {
+"": SubResource("AnimationLibrary_mbwyp")
+}
+autoplay = "minutes_anim"
+
+[node name="hours" type="AnimationPlayer" parent="clock"]
+libraries = {
+"": SubResource("AnimationLibrary_drv7h")
+}
+autoplay = "hours_anim"
+
+[node name="seconds" type="AnimationPlayer" parent="clock"]
+libraries = {
+"": SubResource("AnimationLibrary_cgyfd")
+}
+autoplay = "seconds_anim"
+
+[node name="Camera2D" type="Camera2D" parent="clock"]
+zoom = Vector2(0.3, 0.3)
+
+[node name="Icon" type="Sprite2D" parent="clock"]
+position = Vector2(818, 4)
+texture = ExtResource("6_fovwc")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="clock"]
+
+[node name="Control" type="Control" parent="clock/CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+
+[node name="s2" type="Label" parent="clock/CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 532.0
+offset_right = 163.0
+offset_bottom = 555.0
+text = "am/"
+
+[node name="HSlider" type="HSlider" parent="clock/CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 104.0
+offset_top = -58.0
+offset_right = -145.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+min_value = -1000.0
+max_value = 1000.0
+value = 1.0
+
+[node name="speed_scale" type="Label" parent="clock/CanvasLayer/Control/HSlider"]
+layout_mode = 0
+offset_left = -40.0
+offset_top = -4.0
+offset_bottom = 19.0
+text = "1"
+
+[node name="s_set" type="LineEdit" parent="clock/CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 189.0
+offset_top = 516.0
+offset_right = 260.0
+offset_bottom = 571.0
+
+[node name="s" type="Label" parent="clock/CanvasLayer/Control/s_set"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = -30.0
+offset_right = 69.0
+offset_bottom = -7.0
+text = "seconds"
+
+[node name="m_set" type="LineEdit" parent="clock/CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 275.0
+offset_top = 516.0
+offset_right = 346.0
+offset_bottom = 571.0
+
+[node name="s2" type="Label" parent="clock/CanvasLayer/Control/m_set"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -30.0
+offset_right = 67.0
+offset_bottom = -7.0
+text = "minutes"
+
+[node name="h_set" type="LineEdit" parent="clock/CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 363.0
+offset_top = 516.0
+offset_right = 434.0
+offset_bottom = 571.0
+
+[node name="s3" type="Label" parent="clock/CanvasLayer/Control/h_set"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -30.0
+offset_right = 66.0
+offset_bottom = -7.0
+text = "hours
+"
+
+[node name="Button" type="Button" parent="clock/CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 449.0
+offset_top = 516.0
+offset_right = 591.0
+offset_bottom = 575.0
+text = "set time"
+
+[connection signal="drag_ended" from="clock/CanvasLayer/Control/HSlider" to="clock" method="_on_h_slider_drag_ended"]
+[connection signal="value_changed" from="clock/CanvasLayer/Control/HSlider" to="clock" method="_on_h_slider_value_changed"]
+[connection signal="text_submitted" from="clock/CanvasLayer/Control/s_set" to="clock" method="_on_s_set_text_submitted"]
+[connection signal="pressed" from="clock/CanvasLayer/Control/Button" to="clock" method="_on_button_pressed"]
